@@ -1,0 +1,1336 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mohamed Rabie — MIS & Finance</title>
+
+  <!-- ===== FONTS ===== -->
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <!-- Playfair Display: elegant serif for headings | Outfit: clean modern for body -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600;1,700&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+
+  <!-- ===== INLINE SVG ICONS — no CDN needed, works offline ===== -->
+  <style>
+    .ico { display:inline-flex; align-items:center; justify-content:center; vertical-align:middle; }
+    .ico svg { width:1em; height:1em; fill:currentColor; flex-shrink:0; }
+  </style>
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — edit colors & fonts here easily
+    ============================================================ */
+    :root {
+      --bg:          #0a0a0f;
+      --bg2:         #111118;
+      --surface:     #16161f;
+      --border:      rgba(255,255,255,0.07);
+      --accent:      #6ee7b7;       /* mint green */
+      --accent2:     #38bdf8;       /* sky blue  */
+      --text:        #e8e8f0;
+      --muted:       #888899;
+      --heading:     #ffffff;
+      --card-glow:   rgba(110,231,183,0.08);
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body:    'Outfit', system-ui, sans-serif;
+      --radius:       16px;
+      --transition:   0.35s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ===== LIGHT MODE overrides ===== */
+    [data-theme="light"] {
+      --bg:       #f4f4f0;
+      --bg2:      #eaeae4;
+      --surface:  #ffffff;
+      --border:   rgba(0,0,0,0.08);
+      --text:     #1a1a2e;
+      --muted:    #666677;
+      --heading:  #0a0a0f;
+      --card-glow:rgba(56,189,248,0.08);
+      --accent:   #0d9488;
+      --accent2:  #0369a1;
+    }
+
+    /* ============================================================
+       RESET & BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; font-size: 16px; }
+
+    /* ============================================================
+       BODY BACKGROUND — deep elegant dark with warm tint
+    ============================================================ */
+    body {
+      font-family: var(--font-body);
+      background: var(--bg);
+      background-image:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(110,231,183,0.055) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(56,189,248,0.04) 0%, transparent 55%),
+        radial-gradient(ellipse 50% 40% at 50% 50%, rgba(129,140,248,0.025) 0%, transparent 60%);
+      color: var(--text);
+      line-height: 1.75;
+      font-weight: 300;
+      transition: background var(--transition), color var(--transition);
+      overflow-x: hidden;
+    }
+
+    [data-theme="light"] body {
+      background-image:
+        radial-gradient(ellipse 80% 60% at 15% 10%, rgba(13,148,136,0.05) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 85% 80%, rgba(3,105,161,0.04) 0%, transparent 55%);
+    }
+
+    ::selection { background: var(--accent); color: #000; }
+
+    a { color: inherit; text-decoration: none; }
+
+    img { display: block; max-width: 100%; }
+
+    /* ============================================================
+       ELEGANT STATIC BACKGROUND — subtle noise + soft gradient
+    ============================================================ */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+       SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 99px; }
+
+    /* ============================================================
+       NAV
+    ============================================================ */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(10,10,15,0.7);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom: 1px solid var(--border);
+      transition: background var(--transition);
+    }
+
+    [data-theme="light"] nav { background: rgba(244,244,240,0.8); }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 1.15rem;
+      letter-spacing: 0.01em;
+      color: var(--heading);
+      font-style: italic;
+    }
+
+    .nav-logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      transition: color var(--transition);
+      position: relative;
+    }
+
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1.5px;
+      background: var(--accent);
+      transition: width var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--accent); }
+    .nav-links a:hover::after { width: 100%; }
+
+    /* Theme toggle */
+    #theme-toggle {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      transition: all var(--transition);
+    }
+
+    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    /* Hamburger */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+    }
+
+    .hamburger span {
+      width: 22px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all var(--transition);
+    }
+
+    /* ============================================================
+       LAYOUT WRAPPER
+    ============================================================ */
+    main { position: relative; z-index: 1; }
+
+    section {
+      padding: 6rem 1.5rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* ============================================================
+       SECTION HEADINGS
+    ============================================================ */
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.6rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 5vw, 2.6rem);
+      font-weight: 700;
+      color: var(--heading);
+      line-height: 1.2;
+      letter-spacing: -0.01em;
+      margin-bottom: 2.5rem;
+    }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 2.5rem 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 0.35rem 1rem;
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      width: fit-content;
+      animation: fadeDown 0.6s ease both;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--accent);
+      animation: pulse 2s infinite;
+    }
+
+    .hero-name {
+      font-family: var(--font-display);
+      font-size: clamp(3rem, 9vw, 6.2rem);
+      font-weight: 800;
+      color: var(--heading);
+      line-height: 1.05;
+      letter-spacing: -0.01em;
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-name .accent { color: var(--accent); font-style: italic; }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2.5vw, 1.25rem);
+      color: var(--muted);
+      font-weight: 300;
+      margin: 1.2rem 0 2.2rem;
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-subtitle strong { color: var(--text); font-weight: 500; }
+
+    .hero-cta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      animation: fadeUp 0.7s 0.35s ease both;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.8rem;
+      border-radius: 99px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all var(--transition);
+      border: none;
+      font-family: var(--font-body);
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #000;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(110,231,183,0.35);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .hero-scroll {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-top: 4rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      animation: fadeUp 0.7s 0.5s ease both;
+    }
+
+    .scroll-line {
+      width: 40px; height: 1px;
+      background: var(--muted);
+    }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      align-items: start;
+    }
+
+    .about-text p {
+      color: var(--muted);
+      margin-bottom: 1rem;
+      font-size: 0.97rem;
+    }
+
+    .about-text p strong { color: var(--text); }
+
+    .about-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1.6rem;
+      transition: all var(--transition);
+    }
+
+    .stat-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent), 0 8px 30px var(--card-glow);
+      transform: translateX(4px);
+    }
+
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      line-height: 1;
+    }
+
+    .stat-label { font-size: 0.82rem; color: var(--muted); margin-top: 0.2rem; }
+
+    /* ============================================================
+       SKILLS SECTION
+    ============================================================ */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .skill-group {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.6rem;
+      transition: all var(--transition);
+    }
+
+    .skill-group:hover {
+      border-color: var(--accent2);
+      box-shadow: 0 8px 30px var(--card-glow);
+    }
+
+    .skill-group-title {
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      margin-bottom: 1.2rem;
+    }
+
+    .skill-item { margin-bottom: 1.1rem; }
+
+    .skill-meta {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .skill-name { color: var(--text); font-weight: 500; }
+    .skill-pct  { color: var(--muted); font-size: 0.8rem; }
+
+    .skill-bar {
+      height: 5px;
+      background: var(--border);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .skill-fill {
+      height: 100%;
+      border-radius: 99px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      width: 0%;   /* animated via JS */
+      transition: width 1.2s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* ============================================================
+       EXPERIENCE TIMELINE
+    ============================================================ */
+    .timeline {
+      position: relative;
+      padding-left: 2rem;
+    }
+
+    /* vertical line */
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 8px; bottom: 8px;
+      width: 1px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 2.8rem;
+    }
+
+    /* dot */
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -2rem;
+      top: 6px;
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      box-shadow: 0 0 0 3px rgba(110,231,183,0.25);
+      transition: transform var(--transition);
+    }
+
+    .timeline-item:hover::before {
+      transform: scale(1.4);
+    }
+
+    .timeline-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 0.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .timeline-company {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-style: italic;
+      color: var(--heading);
+    }
+
+    .timeline-role {
+      font-size: 0.82rem;
+      font-weight: 500;
+      color: var(--accent);
+      background: rgba(110,231,183,0.1);
+      padding: 0.15rem 0.6rem;
+      border-radius: 99px;
+    }
+
+    .timeline-date {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .timeline-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ============================================================
+       EDUCATION
+    ============================================================ */
+    .edu-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      display: flex;
+      gap: 1.6rem;
+      align-items: flex-start;
+      transition: all var(--transition);
+    }
+
+    .edu-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 8px 40px var(--card-glow);
+      transform: translateY(-3px);
+    }
+
+    .edu-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      background: rgba(110,231,183,0.12);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .edu-school {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--heading);
+    }
+
+    .edu-degree {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin: 0.2rem 0;
+    }
+
+    .edu-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      margin-top: 0.7rem;
+    }
+
+    .tag {
+      font-size: 0.75rem;
+      font-weight: 500;
+      padding: 0.2rem 0.7rem;
+      border-radius: 99px;
+      background: var(--bg2);
+      border: 1px solid var(--border);
+      color: var(--muted);
+    }
+
+    .tag.highlight { background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.3); color: var(--accent2); }
+
+    /* ============================================================
+       PROJECTS
+    ============================================================ */
+    .project-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform var(--transition);
+    }
+
+    .project-card:hover::before { transform: scaleX(1); }
+
+    .project-card:hover {
+      border-color: rgba(110,231,183,0.3);
+      box-shadow: 0 12px 50px var(--card-glow);
+      transform: translateY(-4px);
+    }
+
+    .project-award {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.75rem;
+      color: #f59e0b;
+      background: rgba(245,158,11,0.1);
+      border: 1px solid rgba(245,158,11,0.25);
+      border-radius: 99px;
+      padding: 0.2rem 0.7rem;
+      margin-bottom: 1rem;
+    }
+
+    .project-title {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: var(--heading);
+      margin-bottom: 0.5rem;
+    }
+
+    .project-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+    }
+
+    .project-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+
+    /* ============================================================
+       CERTIFICATES
+    ============================================================ */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+
+    .cert-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      transition: all var(--transition);
+    }
+
+    .cert-card:hover {
+      border-color: var(--accent2);
+      transform: translateY(-2px);
+    }
+
+    .cert-icon {
+      width: 36px; height: 36px;
+      border-radius: 8px;
+      background: rgba(56,189,248,0.1);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--accent2);
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .cert-name { font-size: 0.85rem; color: var(--text); font-weight: 500; }
+    .cert-issuer { font-size: 0.75rem; color: var(--muted); }
+
+    /* ============================================================
+       CONTACT
+    ============================================================ */
+    .contact-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 3rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-box::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 200px; height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(110,231,183,0.12), transparent 70%);
+      pointer-events: none;
+    }
+
+    .contact-email {
+      font-family: var(--font-display);
+      font-size: clamp(1rem, 3vw, 1.4rem);
+      font-weight: 700;
+      color: var(--accent);
+      display: inline-block;
+      margin: 0.8rem 0 1.6rem;
+      transition: opacity var(--transition);
+    }
+
+    .contact-email:hover { opacity: 0.75; }
+
+    .contact-links {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .social-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.65rem 1.4rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--bg2);
+      color: var(--text);
+      transition: all var(--transition);
+      cursor: pointer;
+    }
+
+    .social-btn:hover {
+      background: var(--accent);
+      color: #000;
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--border);
+      position: relative;
+      z-index: 1;
+    }
+
+    /* ============================================================
+       SCROLL-REVEAL BASE STATE
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* staggered children */
+    .reveal-stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay: 0.05s; }
+    .reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay: 0.15s; }
+    .reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay: 0.25s; }
+    .reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay: 0.35s; }
+    .reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay: 0.45s; }
+    .reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay: 0.55s; }
+
+    /* ============================================================
+       KEYFRAMES
+    ============================================================ */
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:none; } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-14px); } to { opacity:1; transform:none; } }
+    @keyframes pulse    { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+    /* ============================================================
+       RESPONSIVE
+    ============================================================ */
+    @media (max-width: 700px) {
+      nav { padding: 0.9rem 1.2rem; }
+
+      .nav-links { display: none; flex-direction: column; gap: 1.2rem; }
+      .nav-links.open {
+        display: flex;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: var(--bg2);
+        border-bottom: 1px solid var(--border);
+        padding: 1.5rem 1.5rem;
+      }
+
+      .hamburger { display: flex; }
+
+      #hero { padding: 7rem 1.2rem 3rem; }
+
+      .about-grid { grid-template-columns: 1fr; }
+
+      .about-stats { flex-direction: row; flex-wrap: wrap; }
+      .about-stats .stat-card { flex: 1 1 120px; }
+
+      .edu-card { flex-direction: column; }
+
+      .contact-box { padding: 2rem 1.2rem; }
+
+      section { padding: 4rem 1.2rem; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- ===== ANIMATED BACKGROUND ===== -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- ===== NAVIGATION ===== -->
+  <nav id="navbar">
+    <div class="nav-logo">MR<span>.</span></div>
+
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <div style="display:flex;gap:0.6rem;align-items:center;">
+      <button id="theme-toggle" aria-label="Toggle theme">
+        <!-- moon / sun icon swapped by JS -->
+        <span class="ico" id="theme-icon"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg></span>
+      </button>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ===== HERO ===== -->
+    <section id="hero">
+      <div class="hero-badge">
+        <span>Open to opportunities</span>
+      </div>
+
+      <h1 class="hero-name">Mohamed<br><span class="accent">Rabie</span></h1>
+
+      <p class="hero-subtitle">
+        <strong>MIS Graduate</strong> · Finance Minor · Android Developer · Data Analyst
+      </p>
+
+      <div class="hero-cta">
+        <!-- Replace href="#" with your actual CV file path -->
+        <a href="Mohamed_Rabie.pdf" download="Mohamed_Rabie_CV.pdf" class="btn btn-primary">
+          <span class="ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 16l-5-5 1.4-1.4 2.6 2.6V4h2v8.2l2.6-2.6L17 11zm-7 4h14v-2H5z"/></svg></span> Download CV
+        </a>
+        <a href="#contact" class="btn btn-outline">
+          <span class="ico"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></span> Get in touch
+        </a>
+      </div>
+
+      <div class="hero-scroll">
+        <div class="scroll-line"></div>
+        <span>Scroll to explore</span>
+      </div>
+    </section>
+
+    <!-- ===== ABOUT ===== -->
+    <section id="about">
+      <p class="section-label reveal">About Me</p>
+      <h2 class="section-title reveal">Analytical mind,<br>creative approach.</h2>
+
+      <div class="about-grid reveal">
+        <div class="about-text">
+          <p>
+            Motivated and detail-oriented <strong>Business Administration graduate</strong> with a focus on
+            Management Information Systems and a minor in Finance.
+          </p>
+          <p>
+            I love bridging the gap between <strong>technology and business</strong> — whether it's building mobile apps,
+            analyzing data, or optimizing financial processes.
+          </p>
+          <p>
+            Currently seeking an entry-level position where I can apply my analytical, technical,
+            and financial skills to contribute to an organization's success.
+          </p>
+          <div style="margin-top:1.4rem; display:flex; gap:0.8rem; flex-wrap:wrap;">
+            <span class="tag">Cairo, Egypt</span>
+            <span class="tag">GPA 3.4</span>
+            <span class="tag highlight">Available Now</span>
+          </div>
+        </div>
+
+        <div class="about-stats reveal-stagger">
+          <div class="stat-card">
+            <div class="stat-num">3</div>
+            <div class="stat-label">Internship experiences</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">A+</div>
+            <div class="stat-label">Graduation project grade</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-num">4+</div>
+            <div class="stat-label">Technical skills mastered</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== SKILLS ===== -->
+    <section id="skills">
+      <p class="section-label reveal">What I bring</p>
+      <h2 class="section-title reveal">Skills & Tools</h2>
+
+      <div class="skills-grid reveal-stagger">
+
+        <!-- Technical -->
+        <div class="skill-group">
+          <div class="skill-group-title"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6z"/></svg></span> Technical</div>
+
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">SQL</span><span class="skill-pct">85%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Excel</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Power BI</span><span class="skill-pct">78%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="78"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Android (Front-End)</span><span class="skill-pct">75%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Java</span><span class="skill-pct">70%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="70"></div></div>
+          </div>
+        </div>
+
+        <!-- Financial -->
+        <div class="skill-group">
+          <div class="skill-group-title"><span class="ico"><svg viewBox="0 0 24 24"><path d="M3.5 18.5l6-6 4 4L22 6.92 20.59 5.5l-7.09 8.08-4-4L2 17z"/></svg></span> Financial</div>
+
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Financial Analysis</span><span class="skill-pct">85%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Budgeting</span><span class="skill-pct">80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Investment Analysis</span><span class="skill-pct">72%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="72"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Financial Accounting</span><span class="skill-pct">80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+        </div>
+
+        <!-- Business & Soft -->
+        <div class="skill-group">
+          <div class="skill-group-title"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 6h-2.18A3 3 0 0015 4H9a3 3 0 00-2.82 2H4a2 2 0 00-2 2v11a2 2 0 002 2h16a2 2 0 002-2V8a2 2 0 00-2-2zm-5 0H9a1 1 0 010-2h6a1 1 0 010 2z"/></svg></span> Business &amp; Soft Skills</div>
+
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Project Management</span><span class="skill-pct">80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Data-Driven Decisions</span><span class="skill-pct">85%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Risk Management</span><span class="skill-pct">75%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-item">
+            <div class="skill-meta"><span class="skill-name">Team Collaboration</span><span class="skill-pct">90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== EXPERIENCE ===== -->
+    <section id="experience">
+      <p class="section-label reveal">Work History</p>
+      <h2 class="section-title reveal">Experience</h2>
+
+      <div class="timeline reveal">
+
+        <!-- Belayim -->
+        <div class="timeline-item">
+          <div class="timeline-header">
+            <span class="timeline-company">Belayim Petroleum</span>
+            <span class="timeline-role">IT · Programming · Database</span>
+            <span class="timeline-date">Jul 2023 – Jan 2023</span>
+          </div>
+          <p class="timeline-desc">
+            Worked within the IT department focusing on database management, programming tasks,
+            and supporting internal information systems used across the petroleum company.
+          </p>
+        </div>
+
+        <!-- Arab Contractors -->
+        <div class="timeline-item">
+          <div class="timeline-header">
+            <span class="timeline-company">The Arab Contractors</span>
+            <span class="timeline-role">Accounting · Excel</span>
+            <span class="timeline-date">Sept 2022 – Oct 2022</span>
+          </div>
+          <p class="timeline-desc">
+            Assisted the accounting department with financial record-keeping, spreadsheet
+            management using advanced Excel techniques, and data organization for project reporting.
+          </p>
+        </div>
+
+        <!-- Banque Misr -->
+        <div class="timeline-item">
+          <div class="timeline-header">
+            <span class="timeline-company">Banque Misr</span>
+            <span class="timeline-role">Financial Analysis · Budgeting</span>
+            <span class="timeline-date">Jun 2022 – Jul 2022</span>
+          </div>
+          <p class="timeline-desc">
+            Supported the financial analysis team with budgeting tasks, data entry, and generating
+            reports that aided in the bank's financial planning processes.
+          </p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== EDUCATION ===== -->
+    <section id="education">
+      <p class="section-label reveal">Academic Background</p>
+      <h2 class="section-title reveal">Education</h2>
+
+      <div class="edu-card reveal">
+        <div class="edu-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 3L1 9l11 6 9-4.91V17h2V9zm-7 9.42V16l7 3.82L19 16v-3.58l-7 3.82z"/></svg></span></div>
+        <div>
+          <div class="edu-school">Future University in Egypt (FUE)</div>
+          <div style="font-size:0.78rem; color:var(--muted); margin-top:0.1rem;">
+            + Additional Certificate from University of Cincinnati
+          </div>
+          <div class="edu-degree">Bachelor of Commerce and Business Administration</div>
+          <div class="edu-meta">
+            <span class="tag highlight">Major: MIS</span>
+            <span class="tag highlight">Minor: Finance</span>
+            <span class="tag">GPA: 3.4</span>
+            <span class="tag">Graduated: June 2024</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== PROJECTS ===== -->
+    <section id="projects">
+      <p class="section-label reveal">What I built</p>
+      <h2 class="section-title reveal">Projects</h2>
+
+      <div class="project-card reveal">
+        <div class="project-award">
+          <span class="ico"><svg viewBox="0 0 24 24"><path d="M19 5h-2V3H7v2H5C3.9 5 3 5.9 3 7v1c0 2.55 1.92 4.63 4.39 4.94A5.01 5.01 0 0011 15.9V18H7v2h10v-2h-4v-2.1a5.01 5.01 0 003.61-2.96C19.08 12.63 21 10.55 21 8V7c0-1.1-.9-2-2-2zM5 8V7h2v3.82C5.84 10.4 5 9.3 5 8zm14 0c0 1.3-.84 2.4-2 2.82V7h2v1z"/></svg></span>
+          Best Graduation Project Award · FUE
+        </div>
+        <div class="project-title">TREKTO one Community</div>
+        <p class="project-desc">
+          A mobile application designed to support Egyptian expatriates by addressing challenges like
+          culture shock and isolation. Provides location-based services and fosters connections among
+          Egyptians abroad — helping users navigate new environments and feel a sense of belonging.
+          The project demonstrates information systems applied to a real-world social problem.
+        </p>
+        <div class="project-tags">
+          <span class="tag highlight">Android</span>
+          <span class="tag highlight">Data Analysis</span>
+          <span class="tag">Location Services</span>
+          <span class="tag">Social Network</span>
+          <span class="tag">Front-End Dev</span>
+          <span class="tag">Grade: A+</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CERTIFICATES ===== -->
+    <section id="certificates">
+      <p class="section-label reveal">Credentials</p>
+      <h2 class="section-title reveal">Certificates</h2>
+
+      <div class="certs-grid reveal-stagger">
+
+        <div class="cert-card">
+          <div class="cert-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5zm0 4l4 4-4 4-4-4zm0 6l-4-4h8z"/></svg></span></div>
+          <div>
+            <div class="cert-name">Financial Accounting</div>
+            <div class="cert-issuer">University of Illinois Urbana</div>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M9.5 4.5L6 8 4 6l-2 2 4 4 5.5-5.5zM9.5 14.5L6 18l-2-2-2 2 4 4 5.5-5.5zM13 7h9v2h-9zm0 10h9v2h-9zm0-5h9v2h-9z"/></svg></span></div>
+          <div>
+            <div class="cert-name">Track Java</div>
+            <div class="cert-issuer">Maharatech</div>
+          </div>
+        </div>
+
+        <div class="cert-card">
+          <div class="cert-icon"><span class="ico"><svg viewBox="0 0 24 24"><path d="M20 18c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2H0v2h24v-2zM4 6h16v10H4z"/></svg></span></div>
+          <div>
+            <div class="cert-name">Track Front-End</div>
+            <div class="cert-issuer">Maharatech</div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ===== CONTACT ===== -->
+    <section id="contact">
+      <p class="section-label reveal">Let's connect</p>
+      <h2 class="section-title reveal">Get In Touch</h2>
+
+      <div class="contact-box reveal">
+        <p style="color:var(--muted); font-size:0.95rem;">
+          I'm open to full-time roles, internships, or freelance projects.
+          Drop me a message — I reply promptly!
+        </p>
+
+        <a href="mailto:MohamedRabie494@gmail.com" class="contact-email">
+          MohamedRabie494@gmail.com
+        </a>
+
+        <div class="contact-links">
+          <a href="https://www.linkedin.com/in/mohamed-rabi3" target="_blank" class="social-btn">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></span> LinkedIn
+          </a>
+          <a href="tel:+201060411031" class="social-btn">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M6.62 10.79a15.05 15.05 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24c1.12.37 2.33.57 3.58.57a1 1 0 011 1V20a1 1 0 01-1 1C9.61 21 3 14.39 3 6a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.57a1 1 0 01-.25 1.01z"/></svg></span> +20 106 041 1031
+          </a>
+          <a href="Mohamed_Rabie.pdf" download="Mohamed_Rabie_CV.pdf" class="btn btn-primary" style="border-radius:99px; padding:0.65rem 1.4rem;">
+            <span class="ico"><svg viewBox="0 0 24 24"><path d="M12 16l-5-5 1.4-1.4 2.6 2.6V4h2v8.2l2.6-2.6L17 11zm-7 4h14v-2H5z"/></svg></span> Download CV
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    <p>Designed & built with ♥ — Mohamed Rabie © 2024</p>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    /* ---------------------------------------------------------------
+       1. DARK / LIGHT MODE TOGGLE
+    --------------------------------------------------------------- */
+    const toggleBtn   = document.getElementById('theme-toggle');
+    const root        = document.documentElement;
+
+    const MOON_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/></svg>`;
+    const SUN_SVG  = `<svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 7a5 5 0 100 10A5 5 0 0012 7zm0-5a1 1 0 011 1v1a1 1 0 01-2 0V3a1 1 0 011-1zm0 17a1 1 0 011 1v1a1 1 0 01-2 0v-1a1 1 0 011-1zm9-9h1a1 1 0 010 2h-1a1 1 0 010-2zM2 12H1a1 1 0 010-2h1a1 1 0 010 2zm15.07-6.49l.71-.71a1 1 0 111.41 1.41l-.71.71a1 1 0 01-1.41-1.41zM5.64 18.36l-.71.71a1 1 0 01-1.41-1.41l.71-.71a1 1 0 011.41 1.41zm12.73 0l.71.71a1 1 0 01-1.41 1.41l-.71-.71a1 1 0 011.41-1.41zM5.64 5.64l-.71-.71A1 1 0 016.34 3.52l.71.71a1 1 0 01-1.41 1.41z"/></svg>`;
+
+    function setTheme(theme) {
+      root.setAttribute('data-theme', theme);
+      document.getElementById('theme-icon').innerHTML = theme === 'dark' ? MOON_SVG : SUN_SVG;
+      localStorage.setItem('theme', theme);
+    }
+
+    // Restore saved theme
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    setTheme(savedTheme);
+
+    toggleBtn.addEventListener('click', () => {
+      setTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+
+    /* ---------------------------------------------------------------
+       2. HAMBURGER MENU (mobile)
+    --------------------------------------------------------------- */
+    const hamburger = document.getElementById('hamburger');
+    const navLinks  = document.getElementById('nav-links');
+
+    hamburger.addEventListener('click', () => {
+      navLinks.classList.toggle('open');
+    });
+
+    // Close menu on link click
+    navLinks.querySelectorAll('a').forEach(a => {
+      a.addEventListener('click', () => navLinks.classList.remove('open'));
+    });
+
+    /* ---------------------------------------------------------------
+       3. CALM AURORA BACKGROUND — slow, barely-moving shimmer
+    --------------------------------------------------------------- */
+    (function () {
+      const canvas = document.getElementById('bg-canvas');
+      const ctx    = canvas.getContext('2d');
+
+      // Three very slow aurora bands — tweak colors here freely
+      const bands = [
+        { x: 0.15, y: 0.18, rx: 0.55, ry: 0.30, color: '#6ee7b7', speed: 0.00006, phase: 0 },
+        { x: 0.78, y: 0.72, rx: 0.50, ry: 0.28, color: '#38bdf8', speed: 0.00004, phase: 2.1 },
+        { x: 0.48, y: 0.88, rx: 0.42, ry: 0.22, color: '#818cf8', speed: 0.00005, phase: 4.3 },
+      ];
+
+      let W, H;
+      function resize() {
+        W = canvas.width  = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function draw(ts) {
+        ctx.clearRect(0, 0, W, H);
+
+        bands.forEach(b => {
+          // Very gentle sway — barely perceptible drift
+          const sway = Math.sin(ts * b.speed + b.phase) * 0.03;
+          const cx = (b.x + sway) * W;
+          const cy = (b.y + Math.cos(ts * b.speed * 0.7 + b.phase) * 0.015) * H;
+          const rx = b.rx * W;
+          const ry = b.ry * H;
+
+          const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(rx, ry));
+          grad.addColorStop(0,   b.color + '28');  /* very low opacity center */
+          grad.addColorStop(0.4, b.color + '10');
+          grad.addColorStop(1,   b.color + '00');
+
+          ctx.save();
+          ctx.scale(1, ry / rx);          // squash into ellipse
+          ctx.beginPath();
+          ctx.arc(cx, cy * (rx / ry), rx, 0, Math.PI * 2);
+          ctx.fillStyle = grad;
+          ctx.fill();
+          ctx.restore();
+        });
+
+        requestAnimationFrame(draw);
+      }
+
+      requestAnimationFrame(draw);
+    })();
+
+    /* ---------------------------------------------------------------
+       4. SCROLL-REVEAL (IntersectionObserver)
+    --------------------------------------------------------------- */
+    const revealEls = document.querySelectorAll('.reveal, .reveal-stagger');
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          // Once revealed, stop observing
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    revealEls.forEach(el => observer.observe(el));
+
+    /* ---------------------------------------------------------------
+       5. ANIMATED SKILL BARS
+       Bars animate when the skills section enters the viewport
+    --------------------------------------------------------------- */
+    const skillsSection = document.getElementById('skills');
+    let skillsAnimated  = false;
+
+    const skillObserver = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && !skillsAnimated) {
+        skillsAnimated = true;
+        document.querySelectorAll('.skill-fill').forEach(bar => {
+          const target = bar.getAttribute('data-width');
+          // Small delay to let the reveal animation settle first
+          setTimeout(() => { bar.style.width = target + '%'; }, 300);
+        });
+      }
+    }, { threshold: 0.2 });
+
+    skillObserver.observe(skillsSection);
+
+    /* ---------------------------------------------------------------
+       6. NAVBAR — add shadow on scroll
+    --------------------------------------------------------------- */
+    const navbar = document.getElementById('navbar');
+
+    window.addEventListener('scroll', () => {
+      navbar.style.boxShadow = window.scrollY > 30
+        ? '0 4px 30px rgba(0,0,0,0.4)'
+        : 'none';
+    });
+  </script>
+</body>
+</html>
